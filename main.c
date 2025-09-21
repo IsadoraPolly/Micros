@@ -1,19 +1,19 @@
+//5.Exibir num display o número Hexadecimal correspondente ao número binário presente num conjunto de quatro chaves/botões.
+
 #include "stm32g0xx.h"
-
 int main(){
-   RCC->IOPENR=0x0000003F; //ligando clock das portas
-   GPIOA->MODER=0x28000400;//configurando PA5 com saída
-   //PA13 e PA14 como função alternativa
-   RCC->APBENR1=0x20;    //ligando clock do Timer 7
-   TIM7->ARR=7999;
-   TIM7->PSC=999;
-   TIM7->CR1 |=0x01;    //habilitando a contagem
-   //timer vai contar 1 segundo
+	int n;
+	RCC->IOPENR= 0x3f;
+	GPIOA->MODER=0x28000000; // pa0, pa1, pa2, pa3;
+	GPIOB->MODER=0x1555;// pb0. pb1, pb2, pb3, pb4, pb5, pb6
+	int display[16]= {0x3F, 0x06, 0x5B, 0x3F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, 0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71};
 
-   while(1){
-       if(TIM7->SR &0x01){    //testa se o tempo passou
-           GPIOA->ODR^=0x20;    //inverte o estado do led
-           TIM7->SR &=~0x01;    // limpa o flag de estouro do timer
-       }
-   }
+	while(1){
+		n = GPIOA-> IDR & 0xF;
+		GPIOB-> ODR = display[n];
+	}
 }
+
+
+
+
